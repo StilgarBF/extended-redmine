@@ -72,7 +72,18 @@ var extendedRedmine = {
 	init: function() {
 
 		extendedRedmine.userSelectHelper.prepareAssignedTo();
-		 
+
+		/**
+		 * Add an ajaxSuccess handle, so we can re-modify the page, after
+		 * redmine has modified it via an ajax call.  This happens especially
+		 * if either the project or the issue status are changed.
+		 */
+		$(document).ajaxSuccess(function() {
+			if(!$("#issue_assigned_to_id ~ a:contains('edit')").length) {
+				/* edit link was removed, re-modify */
+				extendedRedmine.userSelectHelper.prepareAssignedTo();
+			}
+		});
 	},
 	
 	/**
